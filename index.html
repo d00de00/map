@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>redsea | PWA Chartplotter</title>
 
-    <!-- iOS Safari Full-Screen Web App (PWA) -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="خرائط البحر">
@@ -273,6 +272,7 @@
             <div class="w-full border-t border-gray-400/30 pt-0.5 text-center">
                 <span class="text-[9px] text-gray-600 font-bold uppercase" data-i18n="remaining">المتبقي</span>
                 <span class="font-black text-[11px] text-amber-700" id="remainingDist">0.00 كم</span>
+                <span class="font-black text-[11px] text-sky-700 mr-1" id="remainingEta" data-i18n-title="etaLabel"></span>
             </div>
         </div>
     </div>
@@ -533,7 +533,7 @@
                 <p class="text-[10px] text-amber-200 leading-relaxed" data-i18n="aboutWarn">
                     ⚠️ لا يغني عن الخرائط الملاحية الرسمية ومعدات السلامة.
                 </p>
-                <div class="text-[10px] text-sky-300 font-bold pt-1" data-i18n="version">الإصدار: 1.7.1 (تحسينات Landscape و PWA)</div>
+                <div class="text-[10px] text-sky-300 font-bold pt-1" data-i18n="version">الإصدار: 1.7.2 (ETA + تحسينات PWA)</div>
             </div>
             <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition" data-i18n="backToMenu">عودة للقائمة</button>
         </div>
@@ -602,6 +602,7 @@
             userLocationMarker: null,
             userAccuracyCircle: null,
             currentUserLatLng: null,
+            currentSpeedKmh: 0,
 
             measureActive: false,
             measurePoints: [],
@@ -636,6 +637,7 @@
                     temp: 'الحرارة',
                     wind: 'الرياح',
                     remaining: 'المتبقي',
+                    etaLabel: 'الوقت المقدر للوصول (ETA)',
                     kmh: 'كم/س',
                     km: 'كم',
                     m: 'م',
@@ -650,7 +652,6 @@
                     myLocation: 'موقعي الحالي',
                     zoomIn: 'تكبير',
                     zoomOut: 'تصغير',
-                    // menu
                     menuTitle: 'لوحة التحكم والخدمات البحرية',
                     tidesBtn: 'جدول وتقويم الصيد',
                     locationsBtn: 'المواضع والمكتسبات المحفوظة',
@@ -659,7 +660,6 @@
                     setHomeBtn: 'تعيين المرسى الحالي',
                     installBtn: 'إرشادات التثبيت كتطبيق',
                     aboutBtn: 'عن البرنامج',
-                    // install
                     installTitle: 'تحويل الموقع لتطبيق هاتف',
                     iosTitle: '🍏 أجهزة آيفون (Safari):',
                     iosStep1: 'افتح الموقع عبر متصفح سافاري.',
@@ -671,7 +671,6 @@
                     androidStep3: 'اختر "تثبيت التطبيق".',
                     httpsWarning: '⚠️ يتطلب الموقع أن يكون على HTTPS ليتم تفعيل التثبيت وخدمة GPS.',
                     backToMenu: 'عودة للقائمة',
-                    // tides
                     tidesTitle: 'التوقعات الفلكية والبحرية لـ 7 أيام',
                     tidesWarn: '⚠️ أوقات المد والجزر تقديرات فلكية مبنية على أطوار القمر ولا تغني عن الجداول الرسمية.',
                     fishingToday: 'تقدير نشاط الصيد اليوم',
@@ -688,23 +687,19 @@
                     sunrise: 'شروق',
                     sunset: 'غروب',
                     illum: 'إضاءة',
-                    // locations
                     locationsTitle: 'المواضع والمكتسبات المحفوظة',
                     noLocations: 'لا توجد مواقع أو مسارات محفوظة حالياً.',
                     savedSites: '📍 المواقع والمطارح:',
                     savedRoutes: '📏 المسارات المحفوظة:',
                     view: 'عرض',
                     routeLen: 'الطول',
-                    // safe routes
                     safeRoutesTitle: 'المسارات الآمنة',
                     safeRoutesDesc: 'استخدم أداة رسم المسارات لتحديد خطوط سير آمنة بين المطارح وحفظها باسم.',
                     startDrawing: 'بدء قياس / رسم مسار جديد',
-                    // about
                     aboutTitle: 'عن البرنامج',
                     aboutDesc: 'منظومة ملاحة بحرية ذكية مصممة للعمل بسلاسة على الهواتف الذكية مع تتبع مباشر وتنبيهات الاقتراب.',
                     aboutWarn: '⚠️ لا يغني عن الخرائط الملاحية الرسمية ومعدات السلامة.',
-                    version: 'الإصدار: 1.7.1 (تحسينات Landscape و PWA)',
-                    // mp
+                    version: 'الإصدار: 1.7.2 (ETA + تحسينات PWA)',
                     mpTitle: 'الخرائط والطبقات',
                     baseMap: 'الخريطة الأساسية:',
                     ocean: '🌊 الأعماق',
@@ -714,7 +709,6 @@
                     uploadMp: 'رفع ملف خريطة (.mp)',
                     exportMp: 'تصدير النقاط كملف .mp',
                     clearAll: 'حذف كل البيانات',
-                    // toasts / dynamic
                     copySuccess: '📋 تم نسخ الإحداثيات',
                     compassOn: '🧭 تم تفعيل البوصلة',
                     compassOff: '🧭 تم تثبيت الشمال',
@@ -738,7 +732,8 @@
                     routeDrawStop: '📏 تم إيقاف أداة القياس',
                     refReset: '📍 تم تصفير نقطة القياس',
                     homeSet: '⚓ تم تعيين المرسى: {lat}, {lng}',
-                    homeReturn: '⚓ المرسى: {d} • اتجاه {b}°',
+                    homeReturn: '⚓ المرسى: {d} • اتجاه {b}°{eta}',
+                    homeReturnEta: ' • ⏱ الوقت المقدر: {eta}',
                     tidesUpdated: '📅 تم تحديث الجدول الفلكي',
                     locationJump: '🎯 تم الانتقال إلى الموقع',
                     routeView: '🎯 عرض المسار: {name}',
@@ -756,7 +751,6 @@
                     confirmClear: 'سيتم حذف جميع النقاط والمسارات والأثر. هل تريد المتابعة؟',
                     enterRouteName: 'أدخل اسمًا لحفظ هذا المسار:',
                     routeDefault: 'مسار',
-                    // moon
                     moonNew: 'محاق (قمر جديد)',
                     moonWaxingCrescent: 'هلال متزايد',
                     moonFirstQuarter: 'تربيع أول',
@@ -769,8 +763,6 @@
                     scoreVeryGood: 'جيدة جداً',
                     scoreGood: 'جيدة',
                     scoreMedium: 'متوسطة',
-                    fishingScoreSuffix: '({p}%) — حسب طور القمر',
-                    // popup
                     markerNameLabel: 'اسم المعلم / العمق:',
                     markerCatLabel: 'التصنيف:',
                     catFish: 'صيد 🐟',
@@ -786,11 +778,7 @@
                     livePos: 'موقعك المباشر',
                     speedLabel: 'السرعة',
                     accuracyLabel: 'الدقة',
-                    metersShort: 'م',
                     newMarkerDefault: 'مطرح جديد',
-                    latShort: 'ش', lngShort: 'ق',
-                    latSouth: 'ج', lngWest: 'غ',
-                    // day names
                     days: ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
                     dateLocale: 'ar-SA-u-ca-gregory',
                     hijriLocale: 'ar-SA-u-ca-islamic-umalqura',
@@ -809,6 +797,7 @@
                     temp: 'Temp',
                     wind: 'Wind',
                     remaining: 'Remaining',
+                    etaLabel: 'Estimated Time of Arrival (ETA)',
                     kmh: 'km/h',
                     km: 'km',
                     m: 'm',
@@ -870,7 +859,7 @@
                     aboutTitle: 'About',
                     aboutDesc: 'A smart marine navigation system designed to run smoothly on smartphones with live tracking and proximity alerts.',
                     aboutWarn: '⚠️ Does not replace official nautical charts and safety equipment.',
-                    version: 'Version: 1.7.1 (Landscape & PWA improvements)',
+                    version: 'Version: 1.7.2 (ETA + PWA improvements)',
                     mpTitle: 'Maps & Layers',
                     baseMap: 'Base map:',
                     ocean: '🌊 Ocean',
@@ -903,7 +892,8 @@
                     routeDrawStop: '📏 Measure tool stopped',
                     refReset: '📍 Reference point reset',
                     homeSet: '⚓ Home port set: {lat}, {lng}',
-                    homeReturn: '⚓ Home: {d} • Bearing {b}°',
+                    homeReturn: '⚓ Home: {d} • Bearing {b}°{eta}',
+                    homeReturnEta: ' • ⏱ ETA: {eta}',
                     tidesUpdated: '📅 Astronomy table updated',
                     locationJump: '🎯 Jumped to location',
                     routeView: '🎯 Showing route: {name}',
@@ -933,7 +923,6 @@
                     scoreVeryGood: 'Very Good',
                     scoreGood: 'Good',
                     scoreMedium: 'Fair',
-                    fishingScoreSuffix: '({p}%) — by moon phase',
                     markerNameLabel: 'Marker name / depth:',
                     markerCatLabel: 'Category:',
                     catFish: 'Fishing 🐟',
@@ -949,10 +938,7 @@
                     livePos: 'Your live position',
                     speedLabel: 'Speed',
                     accuracyLabel: 'Accuracy',
-                    metersShort: 'm',
                     newMarkerDefault: 'New site',
-                    latShort: 'N', lngShort: 'E',
-                    latSouth: 'S', lngWest: 'W',
                     days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
                     dateLocale: 'en-US',
                     hijriLocale: 'en-u-ca-islamic-umalqura',
@@ -985,7 +971,6 @@
                     if (dict[k] !== undefined) el.title = dict[k];
                 });
 
-                // Compass letters
                 const cw = document.getElementById('compassW');
                 const ce = document.getElementById('compassE');
                 const cs = document.getElementById('compassS');
@@ -993,11 +978,9 @@
                 if (ce) ce.textContent = dict.e;
                 if (cs) cs.textContent = dict.s;
 
-                // Language button label
                 const lb = document.getElementById('langBtnText');
                 if (lb) lb.textContent = (lang === 'ar') ? 'EN' : 'ع';
 
-                // Refresh dynamic UI
                 if (this.map) { this.updateHud(); this.updateScale(); this.updateWeather(); this.updateRemainingDistanceToCenter(); }
             },
 
@@ -1050,6 +1033,21 @@
                 for (let i = 0; i < points.length - 1; i++) total += this.map.distance(points[i], points[i + 1]);
                 return total;
             },
+
+            // ============ ETA Helpers ============
+            formatETA(seconds) {
+                if (!isFinite(seconds) || seconds <= 0) return '--:--';
+                const totalMin = Math.round(seconds / 60);
+                const h = Math.floor(totalMin / 60);
+                const m = totalMin % 60;
+                return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+            },
+
+            calculateETA(distanceMeters) {
+                if (!this.currentSpeedKmh || this.currentSpeedKmh < 0.5) return null;
+                return distanceMeters / (this.currentSpeedKmh / 3.6);
+            },
+
             _show(id) { const el = document.getElementById(id); if (el) { el.classList.remove('hidden'); el.classList.add('flex'); } },
             _hide(id) { const el = document.getElementById(id); if (el) { el.classList.remove('flex'); el.classList.add('hidden'); } },
 
@@ -1117,12 +1115,18 @@
                 if (!this.map) return;
                 const center = this.map.getCenter();
                 const el = document.getElementById('remainingDist');
+                const etaEl = document.getElementById('remainingEta');
                 if (!el) return;
                 if (this.currentUserLatLng) {
                     const meters = this.map.distance(this.currentUserLatLng, [center.lat, center.lng]);
                     el.textContent = `${(meters / 1000).toFixed(2)} ${this.t('km')}`;
+                    if (etaEl) {
+                        const etaSec = this.calculateETA(meters);
+                        etaEl.textContent = etaSec !== null ? ` ⏱ ${this.formatETA(etaSec)}` : '';
+                    }
                 } else {
                     el.textContent = `0.00 ${this.t('km')}`;
+                    if (etaEl) etaEl.textContent = '';
                 }
             },
 
@@ -1575,8 +1579,10 @@
                 this.homeLine = L.polyline([[startPoint.lat, startPoint.lng], this.homePort], { color: '#ffd100', weight: 4, dashArray: '6, 6' }).addTo(this.measureLayerGroup);
                 const dist = this.map.distance([startPoint.lat, startPoint.lng], this.homePort);
                 const brg = this.calculateBearing(startPoint.lat, startPoint.lng, this.homePort[0], this.homePort[1]);
+                const etaSec = this.calculateETA(dist);
+                const etaText = etaSec !== null ? this.tf('homeReturnEta', { eta: this.formatETA(etaSec) }) : '';
                 this.map.fitBounds([[startPoint.lat, startPoint.lng], this.homePort], { padding: [40, 40] });
-                this.showToast(this.tf('homeReturn', { d: this.fmtDist(dist), b: Math.round(brg) }));
+                this.showToast(this.tf('homeReturn', { d: this.fmtDist(dist), b: Math.round(brg), eta: etaText }));
             },
 
             openAboutModal() { this.closeMenu(); this._show('aboutModal'); },
@@ -1741,6 +1747,8 @@
                         this.currentUserLatLng = [lat, lng];
 
                         const speedKmh = speedMs != null && speedMs >= 0 ? (speedMs * 3.6).toFixed(1) : '0.0';
+                        this.currentSpeedKmh = parseFloat(speedKmh) || 0;
+
                         const courseStr = heading != null && !isNaN(heading) ? `${Math.round(heading)}°` : '--°';
                         document.getElementById('navSpeed').innerHTML = `<i class="fa-solid fa-gauge text-cyan-700"></i> ${speedKmh} ${this.t('kmh')}`;
                         document.getElementById('navCourse').innerHTML = `<i class="fa-solid fa-compass text-sky-600"></i> ${courseStr}`;
@@ -1790,6 +1798,7 @@
                 }
                 this.autoFollow = false;
                 this.currentUserLatLng = null;
+                this.currentSpeedKmh = 0;
                 document.getElementById('locateBtn').classList.remove('circle-active');
                 if (this.userLocationMarker) { this.map.removeLayer(this.userLocationMarker); this.userLocationMarker = null; }
                 if (this.userAccuracyCircle) { this.map.removeLayer(this.userAccuracyCircle); this.userAccuracyCircle = null; }
