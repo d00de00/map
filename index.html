@@ -12,10 +12,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="theme-color" content="#1e3a6e">
 
-    <!-- PWA Manifest Link -->
     <link rel="manifest" href="manifest.json">
-
-    <!-- ✅ التعديل هنا: تم استبدال أكواد الـ SVG بملفات PNG (أيقونات التطبيق) -->
     <link rel="icon" type="image/png" href="icon-192.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
 
@@ -93,7 +90,6 @@
             font-size: 13px;
             line-height: 1.35;
             text-align: center;
-            direction: rtl;
         }
 
         .circle-tool-btn {
@@ -158,9 +154,9 @@
             border-radius: 12px !important;
             border: 2px solid #1f3c73;
             font-family: 'Cairo', sans-serif;
-            text-align: right;
-            direction: rtl;
         }
+        [dir="rtl"] .leaflet-popup-content-wrapper { direction: rtl; text-align: right; }
+        [dir="ltr"] .leaflet-popup-content-wrapper { direction: ltr; text-align: left; }
         .leaflet-popup-content input,
         .leaflet-popup-content select { font-size: 16px; }
 
@@ -201,7 +197,6 @@
 
     <!-- Splash Screen -->
     <div id="splashScreen">
-        <!-- تم الإبقاء على SVG هنا لأنه يظهر داخل التطبيق وليس كأيقونة على الشاشة الرئيسية -->
         <div class="w-28 h-28 rounded-3xl border-4 border-white/85 shadow-2xl flex items-center justify-center mb-6 overflow-hidden animate-bounce bg-[#0092da]">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="w-full h-full">
                 <rect width="512" height="512" fill="#0092da"/>
@@ -213,7 +208,7 @@
             </svg>
         </div>
         <h1 class="text-3xl font-black text-amber-300 tracking-wider mb-2">RedSea</h1>
-        <p class="text-sm text-sky-200 font-bold mb-8">منظومة الملاحة البحرية الذكية</p>
+        <p class="text-sm text-sky-200 font-bold mb-8" data-i18n="appSubtitle">منظومة الملاحة البحرية الذكية</p>
         <div class="w-8 h-8 border-4 border-cyan-300 border-t-transparent rounded-full animate-spin"></div>
     </div>
 
@@ -234,54 +229,57 @@
     <!-- TOP-LEFT UI -->
     <div class="fixed left-3 z-20 flex flex-col items-start gap-2.5" style="top: calc(12px + var(--sat));" dir="ltr">
         <div class="flex items-center gap-2.5">
-            <button onclick="app.openMenu()" title="القائمة والخرائط" class="top-sq-btn btn-navy-sq">
+            <button onclick="app.openMenu()" data-i18n-title="menuBtn" title="القائمة والخرائط" class="top-sq-btn btn-navy-sq">
                 <i class="fa-solid fa-bars text-xl"></i>
             </button>
-            <button onclick="app.toggleGpsState()" title="حالة GPS" class="top-sq-btn btn-grey-sq" id="gpsStatusBtn">
+            <button onclick="app.toggleGpsState()" data-i18n-title="gpsBtn" title="حالة GPS" class="top-sq-btn btn-grey-sq" id="gpsStatusBtn">
                 <i class="fa-solid fa-satellite-dish text-lg"></i>
             </button>
+            <button onclick="app.toggleLanguage()" data-i18n-title="langBtn" title="تغيير اللغة" class="top-sq-btn btn-navy-sq" id="langBtn">
+                <span id="langBtnText" class="font-black text-sm">EN</span>
+            </button>
         </div>
-        <div class="info-pill cursor-pointer" onclick="app.copyCoords()" title="انقر لنسخ الإحداثيات">
+        <div class="info-pill cursor-pointer" onclick="app.copyCoords()" data-i18n-title="copyCoords">
             <div id="pillLat">-- ش</div>
             <div id="pillLng">-- ق</div>
         </div>
-        <div class="info-pill cursor-pointer" onclick="app.resetReferencePoint()" title="إعادة تعيين نقطة القياس">
+        <div class="info-pill cursor-pointer" onclick="app.resetReferencePoint()" data-i18n-title="resetRef">
             <div id="pillDist">0.00 كلم</div>
             <div id="pillBearing">0°</div>
         </div>
-        <div class="info-pill flex justify-around items-center" style="color: #1e3a6e;" title="السرعة والاتجاه الحي">
+        <div class="info-pill flex justify-around items-center" style="color: #1e3a6e;" data-i18n-title="liveSpeed">
             <div class="flex flex-col items-center">
-                <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1">السرعة</span>
+                <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1" data-i18n="speed">السرعة</span>
                 <span id="navSpeed" class="font-black text-xs flex items-center gap-1"><i class="fa-solid fa-gauge text-cyan-700"></i> 0.0 كم/س</span>
             </div>
             <div class="w-px h-5 bg-gray-400/40 mx-1.5"></div>
             <div class="flex flex-col items-center">
-                <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1">المسار</span>
+                <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1" data-i18n="course">المسار</span>
                 <span id="navCourse" class="font-black text-xs flex items-center gap-1"><i class="fa-solid fa-compass text-sky-600"></i> --°</span>
             </div>
         </div>
-        <div class="info-pill cursor-pointer flex flex-col gap-1" style="color: #1e3a6e;" onclick="app.updateWeather()" title="انقر لتحديث الطقس">
+        <div class="info-pill cursor-pointer flex flex-col gap-1" style="color: #1e3a6e;" onclick="app.updateWeather()" data-i18n-title="clickRefresh">
             <div class="flex justify-around items-center w-full">
                 <div class="flex flex-col items-center">
-                    <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1">الحرارة</span>
+                    <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1" data-i18n="temp">الحرارة</span>
                     <span id="weatherTemp" class="font-black text-[11px] flex items-center gap-1"><i class="fa-solid fa-temperature-half text-red-500"></i> --°C</span>
                 </div>
                 <div class="w-px h-4 bg-gray-400/40 mx-1"></div>
                 <div class="flex flex-col items-center">
-                    <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1">الرياح</span>
+                    <span class="text-[9px] text-gray-600 font-bold uppercase leading-none mb-1" data-i18n="wind">الرياح</span>
                     <span id="weatherWind" class="font-black text-[11px] flex items-center gap-1"><i class="fa-solid fa-wind text-sky-600"></i> -- كم/س</span>
                 </div>
             </div>
             <div class="w-full border-t border-gray-400/30 pt-0.5 text-center">
-                <span class="text-[9px] text-gray-600 font-bold uppercase">المتبقي: </span>
-                <span id="remainingDist" class="font-black text-[11px] text-amber-700">0.00 كم</span>
+                <span class="text-[9px] text-gray-600 font-bold uppercase" data-i18n="remaining">المتبقي</span>
+                <span class="font-black text-[11px] text-amber-700" id="remainingDist">0.00 كم</span>
             </div>
         </div>
     </div>
 
     <!-- TOP-RIGHT: COMPASS -->
     <div class="fixed right-3 z-20" style="top: calc(12px + var(--sat));">
-        <div class="w-[74px] h-[74px] rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] cursor-pointer relative flex items-center justify-center bg-black border-2 border-slate-700" onclick="app.toggleCompass()" title="بوصلة">
+        <div class="w-[74px] h-[74px] rounded-full shadow-[0_4px_12px_rgba(0,0,0,0.5)] cursor-pointer relative flex items-center justify-center bg-black border-2 border-slate-700" onclick="app.toggleCompass()" data-i18n-title="compassBtn">
             <svg viewBox="0 0 120 120" class="w-full h-full">
                 <g id="blackCompassDial">
                     <g stroke="#ffffff" stroke-linecap="round">
@@ -298,9 +296,9 @@
                         <line x1="60" y1="8" x2="60" y2="14" stroke-width="2" transform="rotate(300 60 60)"/>
                         <line x1="60" y1="8" x2="60" y2="14" stroke-width="2" transform="rotate(330 60 60)"/>
                     </g>
-                    <text x="24" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">W</text>
-                    <text x="96" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">E</text>
-                    <text x="60" y="102" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">S</text>
+                    <text id="compassW" x="24" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">W</text>
+                    <text id="compassE" x="96" y="66" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">E</text>
+                    <text id="compassS" x="60" y="102" fill="#fff" font-size="16" font-weight="bold" text-anchor="middle">S</text>
                     <polygon points="60,12 68,38 60,32 52,38" fill="#38b000"/>
                     <polygon points="60,32 68,38 60,60 52,38" fill="#ef233c" opacity="0.8"/>
                     <line x1="60" y1="60" x2="60" y2="24" stroke="#52b788" stroke-width="4" stroke-linecap="round"/>
@@ -313,31 +311,31 @@
     <!-- RIGHT TOOLBAR -->
     <div class="fixed right-3 z-20 flex flex-col gap-2.5 overflow-y-auto no-scrollbar"
          style="top: calc(105px + var(--sat)); bottom: calc(180px + var(--sab)); padding-right: 2px;">
-        <button onclick="app.addEditableMarkerFromCenter()" class="circle-tool-btn circle-blue" title="حفظ موقع">
+        <button onclick="app.addEditableMarkerFromCenter()" class="circle-tool-btn circle-blue" data-i18n-title="saveLocation">
             <i class="fa-solid fa-location-dot text-lg"></i>
         </button>
-        <button id="measureBtn" onclick="app.toggleMeasureTool()" class="circle-tool-btn circle-blue" title="قياس مسار">
+        <button id="measureBtn" onclick="app.toggleMeasureTool()" class="circle-tool-btn circle-blue" data-i18n-title="measureRoute">
             <i class="fa-solid fa-route text-lg"></i>
         </button>
-        <button id="trackBtn" onclick="app.toggleTrackRecording()" class="circle-tool-btn circle-grey" title="تسجيل الأثر">
+        <button id="trackBtn" onclick="app.toggleTrackRecording()" class="circle-tool-btn circle-grey" data-i18n-title="recordTrack">
             <svg viewBox="0 0 512 512" class="w-5 h-5 fill-current">
                 <path d="M464 256c-8.8 0-16 7.2-16 16v32c0 52.9-43.1 96-96 96H159.2c-23.7 0-45.9-10.4-61.1-28.5L59 334.4c-15.6-18.4-24.2-42-24.2-66.2V256c0-8.8-7.2-16-16-16s-16 7.2-16 16v12.2c0 33.3 11.8 65.5 33.3 90.9l39.1 46.1c22.7 26.8 55.7 42.2 90.5 42.2H352c79.5 0 144-64.5 144-144v-32c0-8.8-7.2-16-16-16zM320 0C258.3 0 208 50.3 208 112c0 61.2 101.3 192 105.5 197.6 2.5 3.3 6.3 5.2 10.5 5.2s8.1-2 10.5-5.2C338.7 304 440 173.2 440 112 440 50.3 389.7 0 320 0zm0 160c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48zM144 32C82.3 32 32 82.3 32 144c0 61.2 101.3 192 105.5 197.6 2.5 3.3 6.3 5.2 10.5 5.2s8.1-2 10.5-5.2C162.7 336 264 205.2 264 144 264 82.3 213.7 32 144 32zm0 160c-26.5 0-48-21.5-48-48s21.5-48 48-48 48 21.5 48 48-21.5 48-48 48z"/>
             </svg>
         </button>
-        <button onclick="app.openMpUploadModal()" class="circle-tool-btn circle-blue" title="الطبقات والخرائط">
+        <button onclick="app.openMpUploadModal()" class="circle-tool-btn circle-blue" data-i18n-title="layersMaps">
             <i class="fa-solid fa-layer-group text-lg"></i>
         </button>
     </div>
 
     <!-- FIXED BOTTOM-RIGHT: Locate + Zoom -->
     <div class="fixed right-3 z-20 flex flex-col gap-2" style="bottom: calc(16px + var(--sab));">
-        <button id="locateBtn" onclick="app.locateUser()" class="circle-tool-btn circle-grey" title="موقعي الحالي">
+        <button id="locateBtn" onclick="app.locateUser()" class="circle-tool-btn circle-grey" data-i18n-title="myLocation">
             <i class="fa-solid fa-location-crosshairs text-lg"></i>
         </button>
-        <button onclick="app.zoomIn()" class="circle-tool-btn circle-blue" title="تكبير">
+        <button onclick="app.zoomIn()" class="circle-tool-btn circle-blue" data-i18n-title="zoomIn">
             <i class="fa-solid fa-plus text-lg"></i>
         </button>
-        <button onclick="app.zoomOut()" class="circle-tool-btn circle-blue" title="تصغير">
+        <button onclick="app.zoomOut()" class="circle-tool-btn circle-blue" data-i18n-title="zoomOut">
             <i class="fa-solid fa-minus text-lg"></i>
         </button>
     </div>
@@ -354,7 +352,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/20">
                 <h3 class="font-extrabold text-base flex items-center gap-2">
                     <i class="fa-solid fa-compass text-amber-400"></i>
-                    لوحة التحكم والخدمات البحرية
+                    <span data-i18n="menuTitle">لوحة التحكم والخدمات البحرية</span>
                 </h3>
                 <button onclick="app.closeMenu()" class="text-sky-200 hover:text-white p-1">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -363,31 +361,31 @@
             <div class="py-3 space-y-2.5 text-sm">
                 <button onclick="app.openTidesModal()" class="w-full bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-water text-cyan-300 text-base w-5"></i>
-                    <span>جدول وتقويم الصيد</span>
+                    <span data-i18n="tidesBtn">جدول وتقويم الصيد</span>
                 </button>
                 <button onclick="app.openLocationsModal()" class="w-full bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-location-dot text-amber-400 text-base w-5"></i>
-                    <span>المواضع والمكتسبات المحفوظة</span>
+                    <span data-i18n="locationsBtn">المواضع والمكتسبات المحفوظة</span>
                 </button>
                 <button onclick="app.openSafeRoutesModal()" class="w-full bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-route text-sky-400 text-base w-5"></i>
-                    <span>المسارات الآمنة والخطوط</span>
+                    <span data-i18n="safeRoutesBtn">المسارات الآمنة والخطوط</span>
                 </button>
                 <button onclick="app.returnToHomePort()" class="w-full bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-house-chimney text-green-400 text-base w-5"></i>
-                    <span>الرجوع إلى المرسى</span>
+                    <span data-i18n="returnHomeBtn">الرجوع إلى المرسى</span>
                 </button>
                 <button onclick="app.setHomePortHere()" class="w-full bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-anchor text-amber-300 text-base w-5"></i>
-                    <span>تعيين المرسى الحالي</span>
+                    <span data-i18n="setHomeBtn">تعيين المرسى الحالي</span>
                 </button>
                 <button onclick="app.openInstallGuideModal()" class="w-full bg-cyan-700 hover:bg-cyan-600 border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-mobile-screen-button text-amber-300 text-base w-5"></i>
-                    <span>إرشادات التثبيت كتطبيق</span>
+                    <span data-i18n="installBtn">إرشادات التثبيت كتطبيق</span>
                 </button>
                 <button onclick="app.openAboutModal()" class="w-full bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white font-bold py-2.5 px-3 rounded-xl flex items-center gap-3 transition shadow">
                     <i class="fa-solid fa-circle-info text-sky-200 text-base w-5"></i>
-                    <span>عن البرنامج</span>
+                    <span data-i18n="aboutBtn">عن البرنامج</span>
                 </button>
             </div>
         </div>
@@ -399,33 +397,33 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/20 mb-3">
                 <h3 class="font-extrabold text-sm flex items-center gap-2 text-cyan-300">
                     <i class="fa-solid fa-mobile-screen-button"></i>
-                    تحويل الموقع لتطبيق هاتف
+                    <span data-i18n="installTitle">تحويل الموقع لتطبيق هاتف</span>
                 </h3>
                 <button onclick="app.closeSubModals()" class="text-sky-200 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="space-y-3 text-xs text-sky-100 leading-relaxed">
                 <div class="bg-[#1e4587] p-2.5 rounded-xl border border-sky-400/30">
-                    <div class="font-bold text-amber-300 text-xs mb-1">🍏 أجهزة آيفون (Safari):</div>
+                    <div class="font-bold text-amber-300 text-xs mb-1" data-i18n="iosTitle">🍏 أجهزة آيفون (Safari):</div>
                     <ol class="list-decimal list-inside space-y-1">
-                        <li>افتح الموقع عبر متصفح <b>سافاري</b>.</li>
-                        <li>اضغط زر <b>المشاركة (Share)</b> بالأسفل.</li>
-                        <li>اختر <b>"إضافة إلى الشاشة الرئيسية"</b>.</li>
+                        <li data-i18n="iosStep1">افتح الموقع عبر متصفح سافاري.</li>
+                        <li data-i18n="iosStep2">اضغط زر المشاركة (Share) بالأسفل.</li>
+                        <li data-i18n="iosStep3">اختر "إضافة إلى الشاشة الرئيسية".</li>
                     </ol>
                 </div>
                 <div class="bg-[#1e4587] p-2.5 rounded-xl border border-sky-400/30">
-                    <div class="font-bold text-amber-300 text-xs mb-1">🤖 أجهزة أندرويد (Chrome):</div>
+                    <div class="font-bold text-amber-300 text-xs mb-1" data-i18n="androidTitle">🤖 أجهزة أندرويد (Chrome):</div>
                     <ol class="list-decimal list-inside space-y-1">
-                        <li>افتح الموقع عبر متصفح <b>كروم</b>.</li>
-                        <li>اضغط قائمة <b>النقاط الثلاث</b> بالأعلى.</li>
-                        <li>اختر <b>"تثبيت التطبيق"</b>.</li>
+                        <li data-i18n="androidStep1">افتح الموقع عبر متصفح كروم.</li>
+                        <li data-i18n="androidStep2">اضغط قائمة النقاط الثلاث بالأعلى.</li>
+                        <li data-i18n="androidStep3">اختر "تثبيت التطبيق".</li>
                     </ol>
                 </div>
-                <div class="text-[10px] text-amber-200 bg-amber-900/30 border border-amber-400/40 rounded-lg p-2 leading-relaxed">
+                <div class="text-[10px] text-amber-200 bg-amber-900/30 border border-amber-400/40 rounded-lg p-2 leading-relaxed" data-i18n="httpsWarning">
                     ⚠️ يتطلب الموقع أن يكون على HTTPS ليتم تفعيل التثبيت وخدمة GPS.
                 </div>
             </div>
             <div class="mt-3 pt-2 border-t border-white/20">
-                <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">عودة للقائمة</button>
+                <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition" data-i18n="backToMenu">عودة للقائمة</button>
             </div>
         </div>
     </div>
@@ -436,17 +434,17 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/25 mb-3">
                 <h3 class="font-extrabold text-sm flex items-center gap-2 text-cyan-300">
                     <i class="fa-solid fa-water"></i>
-                    التوقعات الفلكية والبحرية لـ 7 أيام
+                    <span data-i18n="tidesTitle">التوقعات الفلكية والبحرية لـ 7 أيام</span>
                 </h3>
                 <button onclick="app.closeSubModals()" class="text-sky-200 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="space-y-3 overflow-y-auto pr-1 flex-grow text-xs">
-                <div class="text-[10px] text-amber-200 bg-amber-900/30 border border-amber-400/40 rounded-lg p-2 leading-relaxed">
+                <div class="text-[10px] text-amber-200 bg-amber-900/30 border border-amber-400/40 rounded-lg p-2 leading-relaxed" data-i18n="tidesWarn">
                     ⚠️ أوقات المد والجزر تقديرات فلكية مبنية على أطوار القمر ولا تغني عن الجداول الرسمية.
                 </div>
                 <div class="bg-[#1e4587] border border-cyan-400/50 rounded-xl p-3 flex items-center justify-between shadow">
                     <div>
-                        <div class="text-[11px] text-sky-200 font-bold mb-0.5">تقدير نشاط الصيد اليوم</div>
+                        <div class="text-[11px] text-sky-200 font-bold mb-0.5" data-i18n="fishingToday">تقدير نشاط الصيد اليوم</div>
                         <div id="fishingRatingText" class="text-sm font-black text-amber-300">--</div>
                     </div>
                     <div class="w-10 h-10 rounded-full bg-cyan-950/60 border border-cyan-300 flex items-center justify-center text-lg text-cyan-300">
@@ -457,11 +455,11 @@
                     <table class="w-full text-right border-collapse min-w-[650px]">
                         <thead>
                             <tr class="bg-[#19396f] text-sky-200 border-b border-white/20 text-[11px]">
-                                <th class="p-2 font-bold">التاريخ / اليوم</th>
-                                <th class="p-2 font-bold">المد والجزر</th>
-                                <th class="p-2 font-bold">الشروق / الغروب</th>
-                                <th class="p-2 font-bold">أطوار القمر</th>
-                                <th class="p-2 font-bold">الضغط والتقييم</th>
+                                <th class="p-2 font-bold" data-i18n="colDate">التاريخ / اليوم</th>
+                                <th class="p-2 font-bold" data-i18n="colTide">المد والجزر</th>
+                                <th class="p-2 font-bold" data-i18n="colSun">الشروق / الغروب</th>
+                                <th class="p-2 font-bold" data-i18n="colMoon">أطوار القمر</th>
+                                <th class="p-2 font-bold" data-i18n="colPressure">الضغط والتقييم</th>
                             </tr>
                         </thead>
                         <tbody id="sevenDaysTidesTableBody" class="divide-y divide-white/10 text-sky-100 text-[11px]"></tbody>
@@ -469,8 +467,8 @@
                 </div>
             </div>
             <div class="mt-3 pt-2 border-t border-white/20 flex gap-2">
-                <button onclick="app.update7DaysTable()" class="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-xl text-xs transition">إعادة الحساب</button>
-                <button onclick="app.openMenu()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">عودة للقائمة</button>
+                <button onclick="app.update7DaysTable()" class="flex-1 bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2 rounded-xl text-xs transition" data-i18n="recalc">إعادة الحساب</button>
+                <button onclick="app.openMenu()" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition" data-i18n="backToMenu">عودة للقائمة</button>
             </div>
         </div>
     </div>
@@ -481,12 +479,12 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/20">
                 <h3 class="font-extrabold text-sm flex items-center gap-2">
                     <i class="fa-solid fa-location-dot text-amber-400"></i>
-                    المواضع والمكتسبات المحفوظة
+                    <span data-i18n="locationsTitle">المواضع والمكتسبات المحفوظة</span>
                 </h3>
                 <button onclick="app.closeSubModals()" class="text-sky-200 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div id="locationsListContainer" class="py-3 max-h-60 overflow-y-auto space-y-2 text-xs flex-grow"></div>
-            <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition mt-2">عودة للقائمة</button>
+            <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition mt-2" data-i18n="backToMenu">عودة للقائمة</button>
         </div>
     </div>
 
@@ -496,15 +494,15 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/20">
                 <h3 class="font-extrabold text-sm flex items-center gap-2">
                     <i class="fa-solid fa-route text-sky-400"></i>
-                    المسارات الآمنة
+                    <span data-i18n="safeRoutesTitle">المسارات الآمنة</span>
                 </h3>
                 <button onclick="app.closeSubModals()" class="text-sky-200 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div class="py-3 space-y-3 text-xs text-sky-100">
-                <p>استخدم أداة رسم المسارات لتحديد خطوط سير آمنة بين المطارح وحفظها باسم.</p>
-                <button onclick="app.closeSubModals(); app.toggleMeasureTool();" class="w-full bg-[#38b000] hover:bg-green-700 text-white font-bold py-2.5 rounded-xl shadow transition">بدء قياس / رسم مسار جديد</button>
+                <p data-i18n="safeRoutesDesc">استخدم أداة رسم المسارات لتحديد خطوط سير آمنة بين المطارح وحفظها باسم.</p>
+                <button onclick="app.closeSubModals(); app.toggleMeasureTool();" class="w-full bg-[#38b000] hover:bg-green-700 text-white font-bold py-2.5 rounded-xl shadow transition" data-i18n="startDrawing">بدء قياس / رسم مسار جديد</button>
             </div>
-            <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">عودة للقائمة</button>
+            <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition" data-i18n="backToMenu">عودة للقائمة</button>
         </div>
     </div>
 
@@ -514,7 +512,7 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/20">
                 <h3 class="font-extrabold text-sm flex items-center gap-2">
                     <i class="fa-solid fa-circle-info text-sky-300"></i>
-                    عن البرنامج
+                    <span data-i18n="aboutTitle">عن البرنامج</span>
                 </h3>
                 <button onclick="app.closeSubModals()" class="text-sky-200 hover:text-white p-1"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
@@ -529,15 +527,15 @@
                     </svg>
                 </div>
                 <h4 class="font-black text-base text-amber-300">RedSea</h4>
-                <p class="text-sky-100 leading-relaxed text-[11px]">
+                <p class="text-sky-100 leading-relaxed text-[11px]" data-i18n="aboutDesc">
                     منظومة ملاحة بحرية ذكية مصممة للعمل بسلاسة على الهواتف الذكية مع تتبع مباشر وتنبيهات الاقتراب.
                 </p>
-                <p class="text-[10px] text-amber-200 leading-relaxed">
+                <p class="text-[10px] text-amber-200 leading-relaxed" data-i18n="aboutWarn">
                     ⚠️ لا يغني عن الخرائط الملاحية الرسمية ومعدات السلامة.
                 </p>
-                <div class="text-[10px] text-sky-300 font-bold pt-1">الإصدار: 1.7.1 (تحسينات Landscape و PWA)</div>
+                <div class="text-[10px] text-sky-300 font-bold pt-1" data-i18n="version">الإصدار: 1.7.1 (تحسينات Landscape و PWA)</div>
             </div>
-            <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition">عودة للقائمة</button>
+            <button onclick="app.openMenu()" class="w-full bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 rounded-xl text-xs transition" data-i18n="backToMenu">عودة للقائمة</button>
         </div>
     </div>
 
@@ -547,36 +545,36 @@
             <div class="flex items-center justify-between pb-3 border-b border-white/20">
                 <h3 class="font-extrabold text-sm flex items-center gap-2">
                     <i class="fa-solid fa-layer-group text-amber-400"></i>
-                    الخرائط والطبقات
+                    <span data-i18n="mpTitle">الخرائط والطبقات</span>
                 </h3>
                 <button onclick="app.closeMpUploadModal()" class="text-sky-200 hover:text-white p-1">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
             <div class="py-4 space-y-3 text-xs">
-                <label class="text-sky-200 font-bold block mb-1">الخريطة الأساسية:</label>
+                <label class="text-sky-200 font-bold block mb-1" data-i18n="baseMap">الخريطة الأساسية:</label>
                 <div class="grid grid-cols-3 gap-2">
-                    <button onclick="app.switchBaseMap('ocean')" id="btn-ocean" class="border-2 text-white font-bold py-2 px-1 rounded-xl shadow transition text-center text-[11px]">🌊 الأعماق</button>
-                    <button onclick="app.switchBaseMap('satellite')" id="btn-satellite" class="border-2 text-white font-bold py-2 px-1 rounded-xl shadow transition text-center text-[11px]">🛰️ الفضائية</button>
-                    <button onclick="app.switchBaseMap('hybrid')" id="btn-hybrid" class="border-2 text-white font-bold py-2 px-1 rounded-xl shadow transition text-center text-[11px]">🌐 المشتركة</button>
+                    <button onclick="app.switchBaseMap('ocean')" id="btn-ocean" class="border-2 text-white font-bold py-2 px-1 rounded-xl shadow transition text-center text-[11px]" data-i18n="ocean">🌊 الأعماق</button>
+                    <button onclick="app.switchBaseMap('satellite')" id="btn-satellite" class="border-2 text-white font-bold py-2 px-1 rounded-xl shadow transition text-center text-[11px]" data-i18n="satellite">🛰️ الفضائية</button>
+                    <button onclick="app.switchBaseMap('hybrid')" id="btn-hybrid" class="border-2 text-white font-bold py-2 px-1 rounded-xl shadow transition text-center text-[11px]" data-i18n="hybrid">🌐 المشتركة</button>
                 </div>
                 <hr class="border-white/20 my-3">
-                <p class="text-sky-100 text-center text-[11px]">
+                <p class="text-sky-100 text-center text-[11px]" data-i18n="mpDesc">
                     رفع ملف خريطة بصيغة (.mp) لعرض النقاط والمضلعات.
                 </p>
                 <div class="flex flex-col gap-2.5">
                     <label class="bg-amber-500 hover:bg-amber-400 text-slate-900 text-xs font-extrabold px-4 py-2.5 rounded-xl cursor-pointer shadow-lg flex items-center justify-center gap-2 transition w-full">
                         <i class="fa-solid fa-upload"></i>
-                        <span>رفع ملف خريطة (.mp)</span>
+                        <span data-i18n="uploadMp">رفع ملف خريطة (.mp)</span>
                         <input type="file" accept=".mp,.txt" class="hidden" onchange="app.handleMpFileUpload(event)">
                     </label>
                     <button onclick="app.exportToMP()" class="bg-[#1e4587] hover:bg-[#15346b] border border-sky-300 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition w-full">
                         <i class="fa-solid fa-download"></i>
-                        <span>تصدير النقاط كملف .mp</span>
+                        <span data-i18n="exportMp">تصدير النقاط كملف .mp</span>
                     </button>
                     <button onclick="app.clearMpMapData()" class="bg-[#d90429] hover:bg-red-700 text-white text-xs font-extrabold px-4 py-2.5 rounded-xl shadow-lg flex items-center justify-center gap-2 transition w-full">
                         <i class="fa-solid fa-trash-can"></i>
-                        <span>حذف كل البيانات</span>
+                        <span data-i18n="clearAll">حذف كل البيانات</span>
                     </button>
                 </div>
             </div>
@@ -595,7 +593,7 @@
             trackLayerGroup: null,
             mpLayerGroup: null,
             refPoint: [21.008971, 39.255416],
-            homePort: [21.008971, 39.255416],   
+            homePort: [21.008971, 39.255416],
             compassActive: false,
             compassRotation: 0,
             markerIdCounter: 0,
@@ -611,7 +609,7 @@
             homeLine: null,
             weatherTimeout: null,
             weatherRequestId: 0,
-            hudPending: false,  
+            hudPending: false,
 
             trackActive: false,
             trackPoints: [],
@@ -621,9 +619,403 @@
             autoFollow: true,
             lastProximityWarningTime: 0,
 
+            // ============ i18n ============
+            currentLang: 'ar',
+            i18n: {
+                ar: {
+                    appSubtitle: 'منظومة الملاحة البحرية الذكية',
+                    menuBtn: 'القائمة والخرائط',
+                    gpsBtn: 'حالة GPS',
+                    langBtn: 'تغيير اللغة',
+                    copyCoords: 'انقر لنسخ الإحداثيات',
+                    resetRef: 'إعادة تعيين نقطة القياس',
+                    liveSpeed: 'السرعة والاتجاه الحي',
+                    clickRefresh: 'انقر لتحديث الطقس',
+                    speed: 'السرعة',
+                    course: 'المسار',
+                    temp: 'الحرارة',
+                    wind: 'الرياح',
+                    remaining: 'المتبقي',
+                    kmh: 'كم/س',
+                    km: 'كم',
+                    m: 'م',
+                    nm: 'نم',
+                    n: 'ش', s: 'ج', e: 'ق', w: 'غ',
+                    am: 'ص', pm: 'م',
+                    compassBtn: 'بوصلة',
+                    saveLocation: 'حفظ موقع',
+                    measureRoute: 'قياس مسار',
+                    recordTrack: 'تسجيل الأثر',
+                    layersMaps: 'الطبقات والخرائط',
+                    myLocation: 'موقعي الحالي',
+                    zoomIn: 'تكبير',
+                    zoomOut: 'تصغير',
+                    // menu
+                    menuTitle: 'لوحة التحكم والخدمات البحرية',
+                    tidesBtn: 'جدول وتقويم الصيد',
+                    locationsBtn: 'المواضع والمكتسبات المحفوظة',
+                    safeRoutesBtn: 'المسارات الآمنة والخطوط',
+                    returnHomeBtn: 'الرجوع إلى المرسى',
+                    setHomeBtn: 'تعيين المرسى الحالي',
+                    installBtn: 'إرشادات التثبيت كتطبيق',
+                    aboutBtn: 'عن البرنامج',
+                    // install
+                    installTitle: 'تحويل الموقع لتطبيق هاتف',
+                    iosTitle: '🍏 أجهزة آيفون (Safari):',
+                    iosStep1: 'افتح الموقع عبر متصفح سافاري.',
+                    iosStep2: 'اضغط زر المشاركة (Share) بالأسفل.',
+                    iosStep3: 'اختر "إضافة إلى الشاشة الرئيسية".',
+                    androidTitle: '🤖 أجهزة أندرويد (Chrome):',
+                    androidStep1: 'افتح الموقع عبر متصفح كروم.',
+                    androidStep2: 'اضغط قائمة النقاط الثلاث بالأعلى.',
+                    androidStep3: 'اختر "تثبيت التطبيق".',
+                    httpsWarning: '⚠️ يتطلب الموقع أن يكون على HTTPS ليتم تفعيل التثبيت وخدمة GPS.',
+                    backToMenu: 'عودة للقائمة',
+                    // tides
+                    tidesTitle: 'التوقعات الفلكية والبحرية لـ 7 أيام',
+                    tidesWarn: '⚠️ أوقات المد والجزر تقديرات فلكية مبنية على أطوار القمر ولا تغني عن الجداول الرسمية.',
+                    fishingToday: 'تقدير نشاط الصيد اليوم',
+                    colDate: 'التاريخ / اليوم',
+                    colTide: 'المد والجزر',
+                    colSun: 'الشروق / الغروب',
+                    colMoon: 'أطوار القمر',
+                    colPressure: 'الضغط والتقييم',
+                    recalc: 'إعادة الحساب',
+                    today: 'اليوم',
+                    calcLoading: 'جاري الحساب...',
+                    high: 'مد',
+                    low: 'جزر',
+                    sunrise: 'شروق',
+                    sunset: 'غروب',
+                    illum: 'إضاءة',
+                    // locations
+                    locationsTitle: 'المواضع والمكتسبات المحفوظة',
+                    noLocations: 'لا توجد مواقع أو مسارات محفوظة حالياً.',
+                    savedSites: '📍 المواقع والمطارح:',
+                    savedRoutes: '📏 المسارات المحفوظة:',
+                    view: 'عرض',
+                    routeLen: 'الطول',
+                    // safe routes
+                    safeRoutesTitle: 'المسارات الآمنة',
+                    safeRoutesDesc: 'استخدم أداة رسم المسارات لتحديد خطوط سير آمنة بين المطارح وحفظها باسم.',
+                    startDrawing: 'بدء قياس / رسم مسار جديد',
+                    // about
+                    aboutTitle: 'عن البرنامج',
+                    aboutDesc: 'منظومة ملاحة بحرية ذكية مصممة للعمل بسلاسة على الهواتف الذكية مع تتبع مباشر وتنبيهات الاقتراب.',
+                    aboutWarn: '⚠️ لا يغني عن الخرائط الملاحية الرسمية ومعدات السلامة.',
+                    version: 'الإصدار: 1.7.1 (تحسينات Landscape و PWA)',
+                    // mp
+                    mpTitle: 'الخرائط والطبقات',
+                    baseMap: 'الخريطة الأساسية:',
+                    ocean: '🌊 الأعماق',
+                    satellite: '🛰️ الفضائية',
+                    hybrid: '🌐 المشتركة',
+                    mpDesc: 'رفع ملف خريطة بصيغة (.mp) لعرض النقاط والمضلعات.',
+                    uploadMp: 'رفع ملف خريطة (.mp)',
+                    exportMp: 'تصدير النقاط كملف .mp',
+                    clearAll: 'حذف كل البيانات',
+                    // toasts / dynamic
+                    copySuccess: '📋 تم نسخ الإحداثيات',
+                    compassOn: '🧭 تم تفعيل البوصلة',
+                    compassOff: '🧭 تم تثبيت الشمال',
+                    gpsOn: '🟢 تم تفعيل الملاحة الحية',
+                    gpsOff: '⚪ تم إيقاف GPS',
+                    locating: '📡 جاري تحديد موقعك...',
+                    gpsError: '⚠️ تعذر تتبع الموقع',
+                    gpsUnsupported: '⚠️ متصفحك لا يدعم GPS',
+                    sensorDenied: '⚠️ تم رفض إذن الحساسات',
+                    sensorError: '⚠️ تعذر طلب إذن الحساسات',
+                    proximity: '⚠️ اقتراب: {d} متر من الهدف!',
+                    markerSaved: '📍 تم حفظ الموقع',
+                    markerUpdated: '✅ تم التحديث',
+                    markerDeleted: '🗑️ تم الحذف',
+                    routeSaved: '💾 تم حفظ المسار: "{name}"',
+                    routeDeleted: '🗑️ تم حذف المسار',
+                    trackStarted: '🟢 بدأ تسجيل المسار الحي...',
+                    trackStopped: '⏹️ تم إيقاف التسجيل — الطول: {d}',
+                    routeTotal: '📏 الإجمالي: {d}',
+                    routeDrawStart: '📏 انقر على الخريطة لتحديد نقاط المسار',
+                    routeDrawStop: '📏 تم إيقاف أداة القياس',
+                    refReset: '📍 تم تصفير نقطة القياس',
+                    homeSet: '⚓ تم تعيين المرسى: {lat}, {lng}',
+                    homeReturn: '⚓ المرسى: {d} • اتجاه {b}°',
+                    tidesUpdated: '📅 تم تحديث الجدول الفلكي',
+                    locationJump: '🎯 تم الانتقال إلى الموقع',
+                    routeView: '🎯 عرض المسار: {name}',
+                    mpExported: '💾 تم التصدير بنجاح',
+                    mpNoData: '⚠️ لا توجد بيانات للتصدير',
+                    mpFileError: '⚠️ تعذر قراءة الملف',
+                    mpParsed: '✨ تم رسم {p} نقطة و{s} عنصر',
+                    mpNoElements: '⚠️ لم يتم العثور على عناصر صالحة',
+                    dataCleared: '🗑️ تم حذف كافة البيانات',
+                    mapSwitched: '🗺️ تم التبديل إلى: {name}',
+                    oceanName: 'خريطة الأعماق',
+                    satelliteName: 'القمر الصناعي',
+                    hybridName: 'الخريطة المشتركة',
+                    confirmDeleteRoute: 'هل أنت متأكد من حذف المسار "{name}"؟',
+                    confirmClear: 'سيتم حذف جميع النقاط والمسارات والأثر. هل تريد المتابعة؟',
+                    enterRouteName: 'أدخل اسمًا لحفظ هذا المسار:',
+                    routeDefault: 'مسار',
+                    // moon
+                    moonNew: 'محاق (قمر جديد)',
+                    moonWaxingCrescent: 'هلال متزايد',
+                    moonFirstQuarter: 'تربيع أول',
+                    moonWaxingGibbous: 'أحدب متزايد',
+                    moonFull: 'بدر كامل',
+                    moonWaningGibbous: 'أحدب متناقص',
+                    moonLastQuarter: 'تربيع ثاني',
+                    moonWaningCrescent: 'هلال متناقص',
+                    scoreExcellent: 'ممتازة',
+                    scoreVeryGood: 'جيدة جداً',
+                    scoreGood: 'جيدة',
+                    scoreMedium: 'متوسطة',
+                    fishingScoreSuffix: '({p}%) — حسب طور القمر',
+                    // popup
+                    markerNameLabel: 'اسم المعلم / العمق:',
+                    markerCatLabel: 'التصنيف:',
+                    catFish: 'صيد 🐟',
+                    catAnchor: 'مرساة ⚓',
+                    catDanger: 'خطر * (أحمر)',
+                    catLighthouse: 'منارة 💡',
+                    catBuoy: 'عوامة 🌊',
+                    catPin: 'دبوس 📌',
+                    catFlag: 'علم 🚩',
+                    catText: 'نص فقط',
+                    update: 'تحديث',
+                    delete: 'حذف',
+                    livePos: 'موقعك المباشر',
+                    speedLabel: 'السرعة',
+                    accuracyLabel: 'الدقة',
+                    metersShort: 'م',
+                    newMarkerDefault: 'مطرح جديد',
+                    latShort: 'ش', lngShort: 'ق',
+                    latSouth: 'ج', lngWest: 'غ',
+                    // day names
+                    days: ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'],
+                    dateLocale: 'ar-SA-u-ca-gregory',
+                    hijriLocale: 'ar-SA-u-ca-islamic-umalqura',
+                },
+                en: {
+                    appSubtitle: 'Smart Maritime Navigation System',
+                    menuBtn: 'Menu & Maps',
+                    gpsBtn: 'GPS Status',
+                    langBtn: 'Change Language',
+                    copyCoords: 'Tap to copy coordinates',
+                    resetRef: 'Reset reference point',
+                    liveSpeed: 'Speed & Live Heading',
+                    clickRefresh: 'Tap to refresh weather',
+                    speed: 'Speed',
+                    course: 'Course',
+                    temp: 'Temp',
+                    wind: 'Wind',
+                    remaining: 'Remaining',
+                    kmh: 'km/h',
+                    km: 'km',
+                    m: 'm',
+                    nm: 'NM',
+                    n: 'N', s: 'S', e: 'E', w: 'W',
+                    am: 'AM', pm: 'PM',
+                    compassBtn: 'Compass',
+                    saveLocation: 'Save location',
+                    measureRoute: 'Measure route',
+                    recordTrack: 'Record track',
+                    layersMaps: 'Layers & Maps',
+                    myLocation: 'My location',
+                    zoomIn: 'Zoom in',
+                    zoomOut: 'Zoom out',
+                    menuTitle: 'Control Panel & Maritime Services',
+                    tidesBtn: 'Tides & Fishing Calendar',
+                    locationsBtn: 'Saved Places & Marks',
+                    safeRoutesBtn: 'Safe Routes & Lines',
+                    returnHomeBtn: 'Return to Home Port',
+                    setHomeBtn: 'Set Current Home Port',
+                    installBtn: 'Install as App Guide',
+                    aboutBtn: 'About',
+                    installTitle: 'Install as Phone App',
+                    iosTitle: '🍏 iOS (Safari):',
+                    iosStep1: 'Open the site in Safari.',
+                    iosStep2: 'Tap the Share button below.',
+                    iosStep3: 'Choose "Add to Home Screen".',
+                    androidTitle: '🤖 Android (Chrome):',
+                    androidStep1: 'Open the site in Chrome.',
+                    androidStep2: 'Tap the three-dots menu at top.',
+                    androidStep3: 'Choose "Install app".',
+                    httpsWarning: '⚠️ The site must be on HTTPS for installation and GPS to work.',
+                    backToMenu: 'Back to menu',
+                    tidesTitle: '7-Day Astronomical & Marine Forecast',
+                    tidesWarn: '⚠️ Tide times are astronomical estimates based on moon phases and do not replace official tables.',
+                    fishingToday: "Today's fishing activity estimate",
+                    colDate: 'Date / Day',
+                    colTide: 'Tides',
+                    colSun: 'Sunrise / Sunset',
+                    colMoon: 'Moon Phase',
+                    colPressure: 'Pressure & Rating',
+                    recalc: 'Recalculate',
+                    today: 'Today',
+                    calcLoading: 'Calculating...',
+                    high: 'High',
+                    low: 'Low',
+                    sunrise: 'Rise',
+                    sunset: 'Set',
+                    illum: 'Illum.',
+                    locationsTitle: 'Saved Places & Marks',
+                    noLocations: 'No saved places or routes yet.',
+                    savedSites: '📍 Sites & Marks:',
+                    savedRoutes: '📏 Saved Routes:',
+                    view: 'View',
+                    routeLen: 'Length',
+                    safeRoutesTitle: 'Safe Routes',
+                    safeRoutesDesc: 'Use the route tool to draw safe navigation lines between sites and save them with a name.',
+                    startDrawing: 'Start drawing a new route',
+                    aboutTitle: 'About',
+                    aboutDesc: 'A smart marine navigation system designed to run smoothly on smartphones with live tracking and proximity alerts.',
+                    aboutWarn: '⚠️ Does not replace official nautical charts and safety equipment.',
+                    version: 'Version: 1.7.1 (Landscape & PWA improvements)',
+                    mpTitle: 'Maps & Layers',
+                    baseMap: 'Base map:',
+                    ocean: '🌊 Ocean',
+                    satellite: '🛰️ Satellite',
+                    hybrid: '🌐 Hybrid',
+                    mpDesc: 'Upload a (.mp) map file to display points and polygons.',
+                    uploadMp: 'Upload (.mp) map file',
+                    exportMp: 'Export points as .mp',
+                    clearAll: 'Delete all data',
+                    copySuccess: '📋 Coordinates copied',
+                    compassOn: '🧭 Compass enabled',
+                    compassOff: '🧭 North locked',
+                    gpsOn: '🟢 Live navigation enabled',
+                    gpsOff: '⚪ GPS stopped',
+                    locating: '📡 Locating you...',
+                    gpsError: '⚠️ Could not track location',
+                    gpsUnsupported: '⚠️ Your browser does not support GPS',
+                    sensorDenied: '⚠️ Sensor permission denied',
+                    sensorError: '⚠️ Could not request sensor permission',
+                    proximity: '⚠️ Proximity: {d} m to target!',
+                    markerSaved: '📍 Location saved',
+                    markerUpdated: '✅ Updated',
+                    markerDeleted: '🗑️ Deleted',
+                    routeSaved: '💾 Route saved: "{name}"',
+                    routeDeleted: '🗑️ Route deleted',
+                    trackStarted: '🟢 Live track recording started...',
+                    trackStopped: '⏹️ Recording stopped — Length: {d}',
+                    routeTotal: '📏 Total: {d}',
+                    routeDrawStart: '📏 Tap on the map to add route points',
+                    routeDrawStop: '📏 Measure tool stopped',
+                    refReset: '📍 Reference point reset',
+                    homeSet: '⚓ Home port set: {lat}, {lng}',
+                    homeReturn: '⚓ Home: {d} • Bearing {b}°',
+                    tidesUpdated: '📅 Astronomy table updated',
+                    locationJump: '🎯 Jumped to location',
+                    routeView: '🎯 Showing route: {name}',
+                    mpExported: '💾 Exported successfully',
+                    mpNoData: '⚠️ No data to export',
+                    mpFileError: '⚠️ Could not read file',
+                    mpParsed: '✨ Drew {p} points and {s} shapes',
+                    mpNoElements: '⚠️ No valid elements found',
+                    dataCleared: '🗑️ All data cleared',
+                    mapSwitched: '🗺️ Switched to: {name}',
+                    oceanName: 'Ocean map',
+                    satelliteName: 'Satellite',
+                    hybridName: 'Hybrid map',
+                    confirmDeleteRoute: 'Are you sure you want to delete route "{name}"?',
+                    confirmClear: 'All points, routes and tracks will be deleted. Continue?',
+                    enterRouteName: 'Enter a name to save this route:',
+                    routeDefault: 'Route',
+                    moonNew: 'New Moon',
+                    moonWaxingCrescent: 'Waxing Crescent',
+                    moonFirstQuarter: 'First Quarter',
+                    moonWaxingGibbous: 'Waxing Gibbous',
+                    moonFull: 'Full Moon',
+                    moonWaningGibbous: 'Waning Gibbous',
+                    moonLastQuarter: 'Last Quarter',
+                    moonWaningCrescent: 'Waning Crescent',
+                    scoreExcellent: 'Excellent',
+                    scoreVeryGood: 'Very Good',
+                    scoreGood: 'Good',
+                    scoreMedium: 'Fair',
+                    fishingScoreSuffix: '({p}%) — by moon phase',
+                    markerNameLabel: 'Marker name / depth:',
+                    markerCatLabel: 'Category:',
+                    catFish: 'Fishing 🐟',
+                    catAnchor: 'Anchor ⚓',
+                    catDanger: 'Danger * (red)',
+                    catLighthouse: 'Lighthouse 💡',
+                    catBuoy: 'Buoy 🌊',
+                    catPin: 'Pin 📌',
+                    catFlag: 'Flag 🚩',
+                    catText: 'Text only',
+                    update: 'Update',
+                    delete: 'Delete',
+                    livePos: 'Your live position',
+                    speedLabel: 'Speed',
+                    accuracyLabel: 'Accuracy',
+                    metersShort: 'm',
+                    newMarkerDefault: 'New site',
+                    latShort: 'N', lngShort: 'E',
+                    latSouth: 'S', lngWest: 'W',
+                    days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+                    dateLocale: 'en-US',
+                    hijriLocale: 'en-u-ca-islamic-umalqura',
+                }
+            },
+
+            t(key) {
+                const lang = this.i18n[this.currentLang] || this.i18n.ar;
+                return lang[key] !== undefined ? lang[key] : key;
+            },
+
+            tf(key, vars) {
+                let s = this.t(key);
+                Object.keys(vars).forEach(k => { s = s.replace(new RegExp('\\{' + k + '\\}', 'g'), vars[k]); });
+                return s;
+            },
+
+            applyLanguage() {
+                const lang = this.currentLang;
+                const dict = this.i18n[lang];
+                document.documentElement.lang = lang;
+                document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const k = el.dataset.i18n;
+                    if (dict[k] !== undefined) el.textContent = dict[k];
+                });
+                document.querySelectorAll('[data-i18n-title]').forEach(el => {
+                    const k = el.dataset.i18nTitle;
+                    if (dict[k] !== undefined) el.title = dict[k];
+                });
+
+                // Compass letters
+                const cw = document.getElementById('compassW');
+                const ce = document.getElementById('compassE');
+                const cs = document.getElementById('compassS');
+                if (cw) cw.textContent = dict.w;
+                if (ce) ce.textContent = dict.e;
+                if (cs) cs.textContent = dict.s;
+
+                // Language button label
+                const lb = document.getElementById('langBtnText');
+                if (lb) lb.textContent = (lang === 'ar') ? 'EN' : 'ع';
+
+                // Refresh dynamic UI
+                if (this.map) { this.updateHud(); this.updateScale(); this.updateWeather(); this.updateRemainingDistanceToCenter(); }
+            },
+
+            toggleLanguage() {
+                this.currentLang = (this.currentLang === 'ar') ? 'en' : 'ar';
+                try { localStorage.setItem('redsea_lang', this.currentLang); } catch (e) { console.warn(e); }
+                this.applyLanguage();
+                this.showToast((this.currentLang === 'ar') ? '🌐 تم التبديل إلى العربية' : '🌐 Switched to English');
+            },
+
             MODAL_IDS: ['mainMenuModal', 'tidesModal', 'locationsModal', 'safeRoutesModal', 'aboutModal', 'mpModal', 'installGuideModal'],
 
             init() {
+                try {
+                    const stored = localStorage.getItem('redsea_lang');
+                    if (stored === 'ar' || stored === 'en') this.currentLang = stored;
+                } catch (e) { console.warn(e); }
+
                 setTimeout(() => {
                     const splash = document.getElementById('splashScreen');
                     if (splash) {
@@ -637,8 +1029,7 @@
                 this.addMockMapElements();
                 this.loadTrack();
                 this.updateBaseMapButtons();
-                this.updateHud();
-                this.updateWeather();
+                this.applyLanguage();
                 this.initPwaServiceWorker();
 
                 document.querySelectorAll('.modal-overlay').forEach(ov => {
@@ -652,7 +1043,7 @@
                 return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
             },
             fmtDist(m) {
-                return `${(m / 1000).toFixed(2)} كم (${(m / 1852).toFixed(2)} ميل بحري)`;
+                return `${(m / 1000).toFixed(2)} ${this.t('km')} (${(m / 1852).toFixed(2)} ${this.t('nm')})`;
             },
             pathLength(points) {
                 let total = 0;
@@ -712,7 +1103,7 @@
                 this.map.on('move', () => this.scheduleHudUpdate());
                 this.map.on('zoomend', () => this.scheduleHudUpdate());
                 this.map.on('moveend', () => {
-                    this.scheduleHudUpdate(); 
+                    this.scheduleHudUpdate();
                     clearTimeout(this.weatherTimeout);
                     this.weatherTimeout = setTimeout(() => this.updateWeather(), 800);
                 });
@@ -729,9 +1120,9 @@
                 if (!el) return;
                 if (this.currentUserLatLng) {
                     const meters = this.map.distance(this.currentUserLatLng, [center.lat, center.lng]);
-                    el.textContent = `${(meters / 1000).toFixed(2)} كم`;
+                    el.textContent = `${(meters / 1000).toFixed(2)} ${this.t('km')}`;
                 } else {
-                    el.textContent = `0.00 كم`;
+                    el.textContent = `0.00 ${this.t('km')}`;
                 }
             },
 
@@ -753,8 +1144,8 @@
                 this.baseLayers[type].addTo(this.map);
                 this.currentBaseMap = type;
                 this.updateBaseMapButtons();
-                const names = { ocean: 'خريطة الأعماق', satellite: 'القمر الصناعي', hybrid: 'الخريطة المشتركة' };
-                this.showToast(`🗺️ تم التبديل إلى: ${names[type]}`);
+                const names = { ocean: this.t('oceanName'), satellite: this.t('satelliteName'), hybrid: this.t('hybridName') };
+                this.showToast(this.tf('mapSwitched', { name: names[type] }));
                 this.closeMpUploadModal();
             },
 
@@ -786,7 +1177,7 @@
                             const pts = savedRoutes[name];
                             this.savedRoutes[name] = pts;
                             L.polyline(pts, { color: '#ffd100', weight: 4, opacity: 0.9 })
-                                .bindPopup(`<b>مسار: ${this.esc(name)}</b><br>الطول: ${this.fmtDist(this.pathLength(pts))}`)
+                                .bindPopup(`<b>${this.esc(name)}</b><br>${this.t('routeLen')}: ${this.fmtDist(this.pathLength(pts))}`)
                                 .addTo(this.measureLayerGroup);
                         });
                     }
@@ -801,7 +1192,7 @@
                 const center = this.map.getCenter();
                 this.homePort = [center.lat, center.lng];
                 try { localStorage.setItem('redsea_homeport', JSON.stringify(this.homePort)); } catch (e) { console.warn(e); }
-                this.showToast(`⚓ تم تعيين المرسى: ${center.lat.toFixed(4)}, ${center.lng.toFixed(4)}`);
+                this.showToast(this.tf('homeSet', { lat: center.lat.toFixed(4), lng: center.lng.toFixed(4) }));
                 this.closeMenu();
             },
 
@@ -818,17 +1209,17 @@
             toggleTrackRecording() {
                 const btn = document.getElementById('trackBtn');
                 if (!this.trackActive) {
-                    if (!navigator.geolocation) { this.showToast('⚠️ متصفحك لا يدعم GPS'); return; }
+                    if (!navigator.geolocation) { this.showToast(this.t('gpsUnsupported')); return; }
                     this.trackActive = true;
                     btn.classList.add('circle-active');
-                    this.showToast('🟢 بدأ تسجيل المسار الحي...');
+                    this.showToast(this.t('trackStarted'));
                 } else {
                     this.trackActive = false;
                     btn.classList.remove('circle-active');
                     if (this.trackPoints.length > 1) {
                         try { localStorage.setItem('redsea_track', JSON.stringify(this.trackPoints)); } catch (e) { console.warn(e); }
                     }
-                    this.showToast(`⏹️ تم إيقاف التسجيل — الطول: ${this.fmtDist(this.pathLength(this.trackPoints))}`);
+                    this.showToast(this.tf('trackStopped', { d: this.fmtDist(this.pathLength(this.trackPoints)) }));
                 }
             },
 
@@ -846,12 +1237,12 @@
                         const temp = Math.round(data.current.temperature_2m);
                         const windSpeed = Math.round(data.current.wind_speed_10m);
                         document.getElementById('weatherTemp').innerHTML = `<i class="fa-solid fa-temperature-half text-red-500"></i> ${temp}°C`;
-                        document.getElementById('weatherWind').innerHTML = `<i class="fa-solid fa-wind text-sky-600"></i> ${windSpeed} كم/س`;
+                        document.getElementById('weatherWind').innerHTML = `<i class="fa-solid fa-wind text-sky-600"></i> ${windSpeed} ${this.t('kmh')}`;
                     }
                 } catch (error) {
                     if (reqId !== this.weatherRequestId) return;
                     document.getElementById('weatherTemp').innerHTML = `<i class="fa-solid fa-temperature-half text-red-500"></i> --°C`;
-                    document.getElementById('weatherWind').innerHTML = `<i class="fa-solid fa-wind text-sky-600"></i> -- كم/س`;
+                    document.getElementById('weatherWind').innerHTML = `<i class="fa-solid fa-wind text-sky-600"></i> -- ${this.t('kmh')}`;
                 }
             },
 
@@ -869,13 +1260,13 @@
             updateHud() {
                 if (!this.map) return;
                 const center = this.map.getCenter();
-                const latDir = center.lat >= 0 ? 'ش' : 'ج';
-                const lngDir = center.lng >= 0 ? 'ق' : 'غ';
+                const latDir = center.lat >= 0 ? this.t('n') : this.t('s');
+                const lngDir = center.lng >= 0 ? this.t('e') : this.t('w');
                 document.getElementById('pillLat').textContent = `${Math.abs(center.lat).toFixed(6)} ${latDir}`;
                 document.getElementById('pillLng').textContent = `${Math.abs(center.lng).toFixed(6)} ${lngDir}`;
 
                 const distMeters = this.map.distance(this.refPoint, [center.lat, center.lng]);
-                document.getElementById('pillDist').textContent = `${(distMeters / 1000).toFixed(2)} كلم • ${(distMeters / 1852).toFixed(2)} نم`;
+                document.getElementById('pillDist').textContent = `${(distMeters / 1000).toFixed(2)} ${this.t('km')} • ${(distMeters / 1852).toFixed(2)} ${this.t('nm')}`;
                 const bearing = this.calculateBearing(this.refPoint[0], this.refPoint[1], center.lat, center.lng);
                 document.getElementById('pillBearing').textContent = `${Math.round(bearing)}°`;
                 this.updateScale();
@@ -899,7 +1290,7 @@
                 const nice = this.niceNumber(meters);
                 const px = Math.max(20, Math.round(70 * nice / meters));
                 document.getElementById('scaleLineBar').style.width = px + 'px';
-                document.getElementById('scaleLabelText').textContent = nice >= 1000 ? `${nice / 1000} كم` : `${nice} م`;
+                document.getElementById('scaleLabelText').textContent = nice >= 1000 ? `${nice / 1000} ${this.t('km')}` : `${nice} ${this.t('m')}`;
             },
 
             calculateBearing(lat1, lng1, lat2, lng2) {
@@ -914,7 +1305,7 @@
             resetReferencePoint() {
                 const center = this.map.getCenter();
                 this.refPoint = [center.lat, center.lng];
-                this.showToast('📍 تم تصفير نقطة القياس');
+                this.showToast(this.t('refReset'));
                 this.updateHud();
             },
 
@@ -938,23 +1329,23 @@
                 const cycles = diffDays / synodicMonth;
                 const phaseFraction = cycles - Math.floor(cycles);
                 const illumination = Math.round(((1 - Math.cos(phaseFraction * 2 * Math.PI)) / 2) * 100);
-                let phaseName = '';
-                if (phaseFraction < 0.03 || phaseFraction > 0.97) phaseName = 'محاق (قمر جديد)';
-                else if (phaseFraction < 0.22) phaseName = 'هلال متزايد';
-                else if (phaseFraction < 0.28) phaseName = 'تربيع أول';
-                else if (phaseFraction < 0.47) phaseName = 'أحدب متزايد';
-                else if (phaseFraction < 0.53) phaseName = 'بدر كامل';
-                else if (phaseFraction < 0.72) phaseName = 'أحدب متناقص';
-                else if (phaseFraction < 0.78) phaseName = 'تربيع ثاني';
-                else phaseName = 'هلال متناقص';
-                return { name: phaseName, illumination: illumination + '%', fraction: phaseFraction };
+                let phaseKey = 'moonNew';
+                if (phaseFraction < 0.03 || phaseFraction > 0.97) phaseKey = 'moonNew';
+                else if (phaseFraction < 0.22) phaseKey = 'moonWaxingCrescent';
+                else if (phaseFraction < 0.28) phaseKey = 'moonFirstQuarter';
+                else if (phaseFraction < 0.47) phaseKey = 'moonWaxingGibbous';
+                else if (phaseFraction < 0.53) phaseKey = 'moonFull';
+                else if (phaseFraction < 0.72) phaseKey = 'moonWaningGibbous';
+                else if (phaseFraction < 0.78) phaseKey = 'moonLastQuarter';
+                else phaseKey = 'moonWaningCrescent';
+                return { nameKey: phaseKey, illumination: illumination + '%', fraction: phaseFraction };
             },
 
             springFactor(moon) { return Math.abs(Math.cos(moon.fraction * 2 * Math.PI)); },
             fishingScore(moon) {
                 const s = this.springFactor(moon);
-                const label = s >= 0.8 ? 'ممتازة' : s >= 0.5 ? 'جيدة جداً' : s >= 0.25 ? 'جيدة' : 'متوسطة';
-                return { label, pct: Math.round(55 + 40 * s) };
+                const labelKey = s >= 0.8 ? 'scoreExcellent' : s >= 0.5 ? 'scoreVeryGood' : s >= 0.25 ? 'scoreGood' : 'scoreMedium';
+                return { labelKey, pct: Math.round(55 + 40 * s) };
             },
 
             calculateSunTimes(lat, lng, date = new Date()) {
@@ -990,7 +1381,7 @@
                     const localTime = (ut + localOffset + 24) % 24;
                     const hours = Math.floor(localTime);
                     const minutes = Math.floor((localTime - hours) * 60);
-                    const period = hours >= 12 ? 'م' : 'ص';
+                    const period = hours >= 12 ? this.t('pm') : this.t('am');
                     const h12 = hours % 12 || 12;
                     return `${String(h12).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${period}`;
                 };
@@ -1005,7 +1396,7 @@
                 const fmt = (m) => {
                     let h = Math.floor(m / 60) % 24;
                     const min = Math.floor(m % 60);
-                    const p = h >= 12 ? 'م' : 'ص';
+                    const p = h >= 12 ? this.t('pm') : this.t('am');
                     h = h % 12 || 12;
                     return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')} ${p}`;
                 };
@@ -1041,24 +1432,26 @@
             async update7DaysTable() {
                 const center = this.map.getCenter();
                 const tbody = document.getElementById('sevenDaysTidesTableBody');
-                tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-sky-200">جاري الحساب...</td></tr>';
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-sky-200">${this.t('calcLoading')}</td></tr>`;
                 const pressures = await this.fetchDailyPressure(center.lat, center.lng);
-                const daysNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+                const daysNames = this.t('days');
                 const today = new Date();
                 tbody.innerHTML = '';
                 for (let i = 0; i < 7; i++) {
                     const d = new Date(today);
                     d.setDate(today.getDate() + i);
-                    const dayName = i === 0 ? 'اليوم' : daysNames[d.getDay()];
-                    const greg = d.toLocaleDateString('ar-SA-u-ca-gregory', { day: 'numeric', month: 'long' });
-                    const hijri = d.toLocaleDateString('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const dayName = i === 0 ? this.t('today') : daysNames[d.getDay()];
+                    const greg = d.toLocaleDateString(this.t('dateLocale'), { day: 'numeric', month: 'long' });
+                    const hijri = d.toLocaleDateString(this.t('hijriLocale'), { day: 'numeric', month: 'long', year: 'numeric' });
                     const sun = this.calculateSunTimes(center.lat, center.lng, d);
                     const moon = this.calculateMoonPhase(d);
                     const tides = this.calculateDailyTides(d);
                     const score = this.fishingScore(moon);
                     const p = pressures ? pressures[this.dayKey(d)] : null;
                     const pText = p != null ? `${Math.round(p)} hPa` : '-- hPa';
-                    if (i === 0) document.getElementById('fishingRatingText').textContent = `${score.label} (${score.pct}%) — حسب طور القمر`;
+                    const moonName = this.t(moon.nameKey);
+                    const scoreLabel = this.t(score.labelKey);
+                    if (i === 0) document.getElementById('fishingRatingText').textContent = `${scoreLabel} (${score.pct}%) — ${this.t('fishingToday')}`;
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="p-2 font-bold text-cyan-300">
@@ -1067,25 +1460,25 @@
                             <div class="text-[9px] text-sky-400 font-normal">${hijri}</div>
                         </td>
                         <td class="p-2">
-                            <div class="text-cyan-200 font-bold">مد: ${tides.high1} (≈${tides.height}م)</div>
-                            <div class="text-sky-300">جزر: ${tides.low1}</div>
+                            <div class="text-cyan-200 font-bold">${this.t('high')}: ${tides.high1} (≈${tides.height}${this.t('m')})</div>
+                            <div class="text-sky-300">${this.t('low')}: ${tides.low1}</div>
                         </td>
                         <td class="p-2 text-amber-300">
-                            <div>شروق: ${sun.sunrise}</div>
-                            <div>غروب: ${sun.sunset}</div>
+                            <div>${this.t('sunrise')}: ${sun.sunrise}</div>
+                            <div>${this.t('sunset')}: ${sun.sunset}</div>
                         </td>
                         <td class="p-2">
-                            <div class="font-bold text-white">${moon.name}</div>
-                            <div class="text-[9px] text-cyan-300">إضاءة: ${moon.illumination}</div>
+                            <div class="font-bold text-white">${moonName}</div>
+                            <div class="text-[9px] text-cyan-300">${this.t('illum')}: ${moon.illumination}</div>
                         </td>
                         <td class="p-2">
                             <div class="font-bold text-emerald-300">${pText}</div>
-                            <div class="text-[9px] text-amber-200">${score.label} (${score.pct}%)</div>
+                            <div class="text-[9px] text-amber-200">${scoreLabel} (${score.pct}%)</div>
                         </td>
                     `;
                     tbody.appendChild(tr);
                 }
-                this.showToast('📅 تم تحديث الجدول الفلكي');
+                this.showToast(this.t('tidesUpdated'));
             },
 
             iconGlyph(icon) {
@@ -1101,12 +1494,12 @@
                 const keys = Object.keys(this.customMarkers);
                 const routeKeys = Object.keys(this.savedRoutes);
                 if (keys.length === 0 && routeKeys.length === 0) {
-                    container.innerHTML = '<p class="text-center text-sky-200">لا توجد مواقع أو مسارات محفوظة حالياً.</p>';
+                    container.innerHTML = `<p class="text-center text-sky-200">${this.t('noLocations')}</p>`;
                 } else {
                     if (keys.length > 0) {
                         const sec1 = document.createElement('div');
                         sec1.className = 'font-bold text-amber-300 mb-1 text-xs';
-                        sec1.textContent = '📍 المواقع والمطارح:';
+                        sec1.textContent = this.t('savedSites');
                         container.appendChild(sec1);
                         keys.forEach(k => {
                             const m = this.customMarkers[k];
@@ -1118,7 +1511,7 @@
                                     <div class="font-bold text-white text-xs">${this.iconGlyph(m.icon)} ${this.esc(m.label)}</div>
                                     <div class="text-[10px] text-sky-200">${ll.lat.toFixed(4)}, ${ll.lng.toFixed(4)}</div>
                                 </div>
-                                <button onclick="app.jumpToLocation(${ll.lat}, ${ll.lng})" class="bg-[#38b000] text-white px-2.5 py-1 rounded-lg text-[11px] font-bold">عرض</button>
+                                <button onclick="app.jumpToLocation(${ll.lat}, ${ll.lng})" class="bg-[#38b000] text-white px-2.5 py-1 rounded-lg text-[11px] font-bold">${this.t('view')}</button>
                             `;
                             container.appendChild(div);
                         });
@@ -1126,7 +1519,7 @@
                     if (routeKeys.length > 0) {
                         const sec2 = document.createElement('div');
                         sec2.className = 'font-bold text-cyan-300 mt-3 mb-1 text-xs';
-                        sec2.textContent = '📏 المسارات المحفوظة:';
+                        sec2.textContent = this.t('savedRoutes');
                         container.appendChild(sec2);
                         routeKeys.forEach(name => {
                             const pts = this.savedRoutes[name];
@@ -1135,10 +1528,10 @@
                             div.innerHTML = `
                                 <div>
                                     <div class="font-bold text-white text-xs"><i class="fa-solid fa-route text-sky-300"></i> ${this.esc(name)}</div>
-                                    <div class="text-[10px] text-sky-200">الطول: ${this.fmtDist(this.pathLength(pts))}</div>
+                                    <div class="text-[10px] text-sky-200">${this.t('routeLen')}: ${this.fmtDist(this.pathLength(pts))}</div>
                                 </div>
                                 <div class="flex gap-1">
-                                    <button onclick="app.jumpToRoute('${name.replace(/'/g, "\\'")}')" class="bg-[#38b000] text-white px-2 py-1 rounded-lg text-[11px] font-bold">عرض</button>
+                                    <button onclick="app.jumpToRoute('${name.replace(/'/g, "\\'")}')" class="bg-[#38b000] text-white px-2 py-1 rounded-lg text-[11px] font-bold">${this.t('view')}</button>
                                     <button onclick="app.deleteRoute('${name.replace(/'/g, "\\'")}')" class="bg-red-600 text-white px-2 py-1 rounded-lg text-[11px] font-bold"><i class="fa-solid fa-trash"></i></button>
                                 </div>
                             `;
@@ -1152,7 +1545,7 @@
             jumpToLocation(lat, lng) {
                 this.closeSubModals();
                 this.map.setView([lat, lng], 15);
-                this.showToast('🎯 تم الانتقال إلى الموقع');
+                this.showToast(this.t('locationJump'));
             },
 
             jumpToRoute(name) {
@@ -1160,16 +1553,16 @@
                 if (pts && pts.length > 0) {
                     this.closeSubModals();
                     this.map.fitBounds(pts, { padding: [40, 40] });
-                    this.showToast(`🎯 عرض المسار: ${name}`);
+                    this.showToast(this.tf('routeView', { name }));
                 }
             },
 
             deleteRoute(name) {
-                if (confirm(`هل أنت متأكد من حذف المسار "${name}"؟`)) {
+                if (confirm(this.tf('confirmDeleteRoute', { name }))) {
                     delete this.savedRoutes[name];
                     this.saveToLocalStorage();
                     this.openLocationsModal();
-                    this.showToast('🗑️ تم حذف المسار');
+                    this.showToast(this.t('routeDeleted'));
                 }
             },
 
@@ -1183,7 +1576,7 @@
                 const dist = this.map.distance([startPoint.lat, startPoint.lng], this.homePort);
                 const brg = this.calculateBearing(startPoint.lat, startPoint.lng, this.homePort[0], this.homePort[1]);
                 this.map.fitBounds([[startPoint.lat, startPoint.lng], this.homePort], { padding: [40, 40] });
-                this.showToast(`⚓ المرسى: ${this.fmtDist(dist)} • اتجاه ${Math.round(brg)}°`);
+                this.showToast(this.tf('homeReturn', { d: this.fmtDist(dist), b: Math.round(brg) }));
             },
 
             openAboutModal() { this.closeMenu(); this._show('aboutModal'); },
@@ -1204,12 +1597,12 @@
                         document.body.removeChild(ta);
                         if (!ok) throw new Error();
                     }
-                    this.showToast('📋 تم نسخ الإحداثيات');
+                    this.showToast(this.t('copySuccess'));
                 } catch (e) { this.showToast(text); }
             },
 
             toggleCompass() {
-                if (this.compassActive) { this.disableCompass(); this.showToast('🧭 تم تثبيت الشمال'); }
+                if (this.compassActive) { this.disableCompass(); this.showToast(this.t('compassOff')); }
                 else this.enableCompass();
             },
 
@@ -1218,13 +1611,13 @@
                     this.compassActive = true;
                     const evt = ('ondeviceorientationabsolute' in window) ? 'deviceorientationabsolute' : 'deviceorientation';
                     window.addEventListener(evt, this.handleOrientation, true);
-                    this.showToast('🧭 تم تفعيل البوصلة');
+                    this.showToast(this.t('compassOn'));
                 };
                 if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                     DeviceOrientationEvent.requestPermission().then(state => {
                         if (state === 'granted') start();
-                        else this.showToast('⚠️ تم رفض إذن الحساسات');
-                    }).catch(() => this.showToast('⚠️ تعذر طلب إذن الحساسات'));
+                        else this.showToast(this.t('sensorDenied'));
+                    }).catch(() => this.showToast(this.t('sensorError')));
                 } else { start(); }
             },
 
@@ -1253,12 +1646,13 @@
             toggleMeasureTool() {
                 if (this.measureActive && this.measurePoints.length > 1) {
                     let n = Object.keys(this.savedRoutes).length + 1;
-                    while (this.savedRoutes[`مسار ${n}`]) n++;
-                    const routeName = prompt('أدخل اسمًا لحفظ هذا المسار:', `مسار ${n}`);
+                    const baseName = this.t('routeDefault');
+                    while (this.savedRoutes[`${baseName} ${n}`]) n++;
+                    const routeName = prompt(this.t('enterRouteName'), `${baseName} ${n}`);
                     if (routeName && routeName.trim() !== '') {
                         this.savedRoutes[routeName.trim()] = [...this.measurePoints];
                         this.saveToLocalStorage();
-                        this.showToast(`💾 تم حفظ المسار: "${routeName.trim()}"`);
+                        this.showToast(this.tf('routeSaved', { name: routeName.trim() }));
                     }
                 }
                 this.measureActive = !this.measureActive;
@@ -1270,15 +1664,15 @@
                 Object.keys(this.savedRoutes).forEach(name => {
                     const pts = this.savedRoutes[name];
                     L.polyline(pts, { color: '#ffd100', weight: 4, opacity: 0.9 })
-                        .bindPopup(`<b>مسار: ${this.esc(name)}</b><br>الطول: ${this.fmtDist(this.pathLength(pts))}`)
+                        .bindPopup(`<b>${this.esc(name)}</b><br>${this.t('routeLen')}: ${this.fmtDist(this.pathLength(pts))}`)
                         .addTo(this.measureLayerGroup);
                 });
                 if (this.measureActive) {
                     btn.classList.add('circle-active');
-                    this.showToast('📏 انقر على الخريطة لتحديد نقاط المسار');
+                    this.showToast(this.t('routeDrawStart'));
                 } else {
                     btn.classList.remove('circle-active');
-                    this.showToast('📏 تم إيقاف أداة القياس');
+                    this.showToast(this.t('routeDrawStop'));
                 }
             },
 
@@ -1289,7 +1683,7 @@
                 if (this.measurePoints.length > 1) {
                     if (this.measureLine) this.measureLayerGroup.removeLayer(this.measureLine);
                     this.measureLine = L.polyline(this.measurePoints, { color: '#ffd100', weight: 4, dashArray: '6, 6' }).addTo(this.measureLayerGroup);
-                    this.showToast(`📏 الإجمالي: ${this.fmtDist(this.pathLength(this.measurePoints))}`);
+                    this.showToast(this.tf('routeTotal', { d: this.fmtDist(this.pathLength(this.measurePoints)) }));
                 }
             },
 
@@ -1299,12 +1693,12 @@
                 if (this.gpsActive) {
                     btn.classList.remove('btn-grey-sq');
                     btn.classList.add('bg-[#38b000]');
-                    this.showToast('🟢 تم تفعيل الملاحة الحية');
+                    this.showToast(this.t('gpsOn'));
                     this.startLiveNavigation();
                 } else {
                     btn.classList.remove('bg-[#38b000]');
                     btn.classList.add('btn-grey-sq');
-                    this.showToast('⚪ تم إيقاف GPS');
+                    this.showToast(this.t('gpsOff'));
                     this.stopLiveNavigation();
                 }
             },
@@ -1315,7 +1709,7 @@
                 const gpsBtn = document.getElementById('gpsStatusBtn');
                 if (gpsBtn) { gpsBtn.classList.remove('btn-grey-sq'); gpsBtn.classList.add('bg-[#38b000]'); }
                 this.startLiveNavigation();
-                this.showToast('📡 جاري تحديد موقعك...');
+                this.showToast(this.t('locating'));
             },
 
             checkProximityToCenter(userLat, userLng) {
@@ -1326,13 +1720,13 @@
                     if (now - this.lastProximityWarningTime > 30000) {
                         this.lastProximityWarningTime = now;
                         if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
-                        this.showToast(`⚠️ اقتراب: ${Math.round(distanceMeters)} متر من الهدف!`);
+                        this.showToast(this.tf('proximity', { d: Math.round(distanceMeters) }));
                     }
                 }
             },
 
             startLiveNavigation() {
-                if (!navigator.geolocation) { this.showToast('⚠️ متصفحك لا يدعم GPS'); return; }
+                if (!navigator.geolocation) { this.showToast(this.t('gpsUnsupported')); return; }
                 if (this.liveWatchId !== null) navigator.geolocation.clearWatch(this.liveWatchId);
                 const locateBtn = document.getElementById('locateBtn');
                 locateBtn.classList.add('circle-active');
@@ -1348,7 +1742,7 @@
 
                         const speedKmh = speedMs != null && speedMs >= 0 ? (speedMs * 3.6).toFixed(1) : '0.0';
                         const courseStr = heading != null && !isNaN(heading) ? `${Math.round(heading)}°` : '--°';
-                        document.getElementById('navSpeed').innerHTML = `<i class="fa-solid fa-gauge text-cyan-700"></i> ${speedKmh} كم/س`;
+                        document.getElementById('navSpeed').innerHTML = `<i class="fa-solid fa-gauge text-cyan-700"></i> ${speedKmh} ${this.t('kmh')}`;
                         document.getElementById('navCourse').innerHTML = `<i class="fa-solid fa-compass text-sky-600"></i> ${courseStr}`;
                         this.updateRemainingDistanceToCenter();
 
@@ -1360,7 +1754,7 @@
                             this.userLocationMarker.setLatLng([lat, lng]);
                             this.userLocationMarker.setIcon(L.divIcon({ className: '', html: boatIconHtml, iconSize: [32, 32], iconAnchor: [16, 16] }));
                         }
-                        this.userLocationMarker.bindPopup(`<b>موقعك المباشر</b><br>السرعة: ${speedKmh} كم/س<br>الدقة: ${Math.round(accuracy)} م`);
+                        this.userLocationMarker.bindPopup(`<b>${this.t('livePos')}</b><br>${this.t('speedLabel')}: ${speedKmh} ${this.t('kmh')}<br>${this.t('accuracyLabel')}: ${Math.round(accuracy)} ${this.t('m')}`);
 
                         if (!this.userAccuracyCircle) {
                             this.userAccuracyCircle = L.circle([lat, lng], { radius: accuracy, color: '#ffd100', fillColor: '#ffd100', fillOpacity: 0.15 }).addTo(this.map);
@@ -1383,7 +1777,7 @@
                     },
                     (error) => {
                         locateBtn.classList.remove('circle-active');
-                        this.showToast('⚠️ تعذر تتبع الموقع');
+                        this.showToast(this.t('gpsError'));
                     },
                     { enableHighAccuracy: true, maximumAge: 1000, timeout: 10000 }
                 );
@@ -1404,8 +1798,8 @@
 
             addEditableMarkerFromCenter() {
                 const center = this.map.getCenter();
-                const id = this.addEditableMarker([center.lat, center.lng], 'مطرح جديد', '🐟', true);
-                this.showToast('📍 تم حفظ الموقع');
+                const id = this.addEditableMarker([center.lat, center.lng], this.t('newMarkerDefault'), '🐟', true);
+                this.showToast(this.t('markerSaved'));
                 setTimeout(() => {
                     const m = this.customMarkers[id];
                     if (m && m.marker) m.marker.openPopup();
@@ -1447,24 +1841,26 @@
 
             createMarkerPopupContent(id, label, icon) {
                 const sel = v => (icon === v ? 'selected' : '');
+                const dir = (this.currentLang === 'ar') ? 'rtl' : 'ltr';
+                const align = (this.currentLang === 'ar') ? 'right' : 'left';
                 return `
-                    <div class="p-1 min-w-[160px] text-right text-xs" dir="rtl">
-                        <label class="text-gray-700 mb-1 block font-bold">اسم المعلم / العمق:</label>
+                    <div class="p-1 min-w-[160px] text-xs" dir="${dir}" style="text-align:${align}">
+                        <label class="text-gray-700 mb-1 block font-bold">${this.t('markerNameLabel')}</label>
                         <input type="text" id="marker-input-${id}" value="${this.esc(label)}" class="w-full p-1.5 mb-2 border border-gray-400 rounded text-black focus:outline-none focus:border-[#0092da] shadow-sm" />
-                        <label class="text-gray-700 mb-1 block font-bold">التصنيف:</label>
+                        <label class="text-gray-700 mb-1 block font-bold">${this.t('markerCatLabel')}</label>
                         <select id="marker-icon-${id}" class="w-full p-1.5 mb-3 border border-gray-400 rounded text-black bg-white focus:outline-none focus:border-[#0092da] shadow-sm">
-                            <option value="🐟" ${sel('🐟')}>صيد 🐟</option>
-                            <option value="⚓" ${sel('⚓')}>مرساة ⚓</option>
-                            <option value="*" ${sel('*')}>خطر * (أحمر)</option>
-                            <option value="💡" ${sel('💡')}>منارة 💡</option>
-                            <option value="🌊" ${sel('🌊')}>عوامة 🌊</option>
-                            <option value="📌" ${sel('📌')}>دبوس 📌</option>
-                            <option value="🚩" ${sel('🚩')}>علم 🚩</option>
-                            <option value="txt" ${sel('txt')}>نص فقط</option>
+                            <option value="🐟" ${sel('🐟')}>${this.t('catFish')}</option>
+                            <option value="⚓" ${sel('⚓')}>${this.t('catAnchor')}</option>
+                            <option value="*" ${sel('*')}>${this.t('catDanger')}</option>
+                            <option value="💡" ${sel('💡')}>${this.t('catLighthouse')}</option>
+                            <option value="🌊" ${sel('🌊')}>${this.t('catBuoy')}</option>
+                            <option value="📌" ${sel('📌')}>${this.t('catPin')}</option>
+                            <option value="🚩" ${sel('🚩')}>${this.t('catFlag')}</option>
+                            <option value="txt" ${sel('txt')}>${this.t('catText')}</option>
                         </select>
                         <div class="flex justify-between gap-2">
-                            <button onclick="app.saveMarkerEdit(${id})" class="bg-[#38b000] text-white px-2.5 py-1.5 rounded-lg font-bold flex-1 transition">تحديث</button>
-                            <button onclick="app.deleteMarker(${id})" class="bg-[#d90429] text-white px-2.5 py-1.5 rounded-lg font-bold flex-1 transition">حذف</button>
+                            <button onclick="app.saveMarkerEdit(${id})" class="bg-[#38b000] text-white px-2.5 py-1.5 rounded-lg font-bold flex-1 transition">${this.t('update')}</button>
+                            <button onclick="app.deleteMarker(${id})" class="bg-[#d90429] text-white px-2.5 py-1.5 rounded-lg font-bold flex-1 transition">${this.t('delete')}</button>
                         </div>
                     </div>
                 `;
@@ -1481,7 +1877,7 @@
                     delete this.customMarkers[id];
                     this.addEditableMarker([currentLatLng.lat, currentLatLng.lng], newLabel, newIcon, true);
                     this.map.closePopup();
-                    this.showToast('✅ تم التحديث');
+                    this.showToast(this.t('markerUpdated'));
                 }
             },
 
@@ -1492,12 +1888,12 @@
                     delete this.customMarkers[id];
                     this.map.closePopup();
                     this.saveToLocalStorage();
-                    this.showToast('🗑️ تم الحذف');
+                    this.showToast(this.t('markerDeleted'));
                 }
             },
 
             clearMpMapData() {
-                if (confirm('سيتم حذف جميع النقاط والمسارات والأثر. هل تريد المتابعة؟')) {
+                if (confirm(this.t('confirmClear'))) {
                     Object.keys(this.customMarkers).forEach(id => {
                         const m = this.customMarkers[id];
                         if (m && m.marker) this.markerLayerGroup.removeLayer(m.marker);
@@ -1519,7 +1915,7 @@
                         localStorage.removeItem('redsea_track');
                         localStorage.setItem('redsea_seeded', '1');
                     } catch (e) { console.warn(e); }
-                    this.showToast('🗑️ تم حذف كافة البيانات');
+                    this.showToast(this.t('dataCleared'));
                     this.closeMpUploadModal();
                 }
             },
@@ -1528,7 +1924,7 @@
                 const markerIds = Object.keys(this.customMarkers);
                 const routeKeys = Object.keys(this.savedRoutes);
                 if (markerIds.length === 0 && routeKeys.length === 0) {
-                    this.showToast('⚠️ لا توجد بيانات للتصدير');
+                    this.showToast(this.t('mpNoData'));
                     return;
                 }
                 let mpData = '; Generated by RedSea Chartplotter PWA\n\n';
@@ -1552,7 +1948,7 @@
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                this.showToast('💾 تم التصدير بنجاح');
+                this.showToast(this.t('mpExported'));
                 this.closeMpUploadModal();
             },
 
@@ -1573,7 +1969,7 @@
                     this.closeMpUploadModal();
                     input.value = '';
                 };
-                reader.onerror = () => this.showToast('⚠️ تعذر قراءة الملف');
+                reader.onerror = () => this.showToast(this.t('mpFileError'));
                 reader.readAsArrayBuffer(file);
             },
 
@@ -1645,9 +2041,9 @@
                 }
                 if (points + shapes > 0) {
                     this.saveToLocalStorage();
-                    this.showToast(`✨ تم رسم ${points} نقطة و${shapes} عنصر`);
+                    this.showToast(this.tf('mpParsed', { p: points, s: shapes }));
                 } else {
-                    this.showToast('⚠️ لم يتم العثور على عناصر صالحة');
+                    this.showToast(this.t('mpNoElements'));
                 }
             },
 
